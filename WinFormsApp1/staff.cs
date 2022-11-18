@@ -1,5 +1,5 @@
 ﻿using System.Data.OleDb;
-
+using WinFormsApp1.Person;
 
 namespace WinFormsApp1
 {
@@ -24,7 +24,7 @@ namespace WinFormsApp1
         }
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Приложение создано для урощения работы HR-менеджера.\nПриятного пользования!", "О Программе");
+            MessageBox.Show("Приложение создано для упрощения работы HR-менеджера.\nПриятного пользования!", "О Программе");
         }
         //
         //Описание кнопок
@@ -97,25 +97,22 @@ namespace WinFormsApp1
             string? prof = dataGridViewSF.Rows[index].Cells[4].Value.ToString();
             string? contact = dataGridViewSF.Rows[index].Cells[5].Value.ToString();
 
-            string SALARY = "";
-            if (salary != null)
+
+            string SAL = "";
+            if (salary != null) // Получение из строки денежного формата целое значение
             {
                 foreach(char s in salary)
                 {
-                    if (char.IsDigit(s) || char.IsPunctuation(s)) SALARY += s;
+                    if (char.IsDigit(s)) SAL += s;
+                    if (char.IsPunctuation(s)) break;
                 }
             }
 
+            int.TryParse(id, out int Id);
+            int.TryParse(SAL, out int Salary);
 
-            OleDbConnection dbConnection = new OleDbConnection(_conectionStr);
-            string cmdText = 
-                $"UPDATE Staff SET _Name= '{name}', _Age= {age}, _Salary= {SALARY}, _Profession= '{prof}', _Contact= '{contact}' WHERE id= {id}";
-            if (sendRequest(cmdText, dbConnection))
-                MessageBox.Show("Данные изменены!", "Выполнено");
-            else
-                MessageBox.Show("Произошла ошибка! Попробуйте снова.", "Ошибка!");
+            DataBase.EditStaff(Id, name, age, contact, prof, Salary);
 
-            LoadDatabase();
         }
         //
         //Вспомогательные методы
