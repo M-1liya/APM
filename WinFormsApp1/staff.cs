@@ -11,8 +11,6 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             LoadDatabase();
-
-
         }
         //
         //Кнопки панели меню
@@ -78,7 +76,7 @@ namespace WinFormsApp1
         private void buttonReload_Click(object sender, EventArgs e)
         {
             LoadDatabase();
-        }
+        }//Ready
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (dataGridViewSF.SelectedRows.Count != 1)
@@ -156,30 +154,7 @@ namespace WinFormsApp1
         }
         void LoadDatabase()
         {
-
-            dataGridViewSF.Rows.Clear();
-
-            OleDbConnection dbConection = new OleDbConnection(_conectionStr);
-            dbConection.Open();
-            OleDbCommand command = new OleDbCommand("SELECT * FROM Staff", dbConection);
-
-            OleDbDataReader reader = command.ExecuteReader();
-
-            dataGridViewSF.Rows.Clear();
-
-            if (reader.HasRows != false)
-            {
-                while (reader.Read())
-                {
-                    dataGridViewSF.Rows.Add
-                        (reader["id"], reader["_Name"], reader["_Age"], reader["_Salary"], reader["_Profession"], reader["_Contact"]);
-                }
-            }
-            else
-                MessageBox.Show("Не удалось получить данные!", "Ошибка!");
-
-            reader.Close();
-            dbConection.Close();
+            DataBase.LoadStaffBase(dataGridViewSF);
         }
 
     }

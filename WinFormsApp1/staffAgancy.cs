@@ -176,6 +176,15 @@ namespace WinFormsApp1
             return true;
         }//Ready
 
+        private void staffAgancy_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!DataBase.AllDataSaved())
+            {
+                SaveDataDialog sd = new(this);
+                sd.ShowDialog();
+            }
+        }
+
 
     }
 

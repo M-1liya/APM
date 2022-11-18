@@ -16,7 +16,9 @@ namespace WinFormsApp1.Person
         private static List<Person> Applicants = new();
         private static List<Person> Staff = new();
 
-
+        //
+        //Элементы управления для базы StaffAg
+        //
         public static int AddApplicant(string name, string age, string experience, string contact, string profession)
         {
             if (_id == -1) GetID();
@@ -145,12 +147,9 @@ namespace WinFormsApp1.Person
                 dataGrid.Rows.Add(a.Id, a.Name, a.Age, a.Experience, a.Contact, a.Profession);
             }
         }
-
-
-
-
-
-
+        //
+        //Элементы управления для базы Staff
+        //
         public static string AddStaff(int id, string name, string age, string experience, string contact, string profession)
         {
 
@@ -252,10 +251,42 @@ namespace WinFormsApp1.Person
             return "Ошибка";
 
         }
+        public static void LoadStaffBase(DataGridView dataGrid)
+        {
+            //Запрос в базу данных
+            dataGrid.Rows.Clear();
 
+            OleDbConnection dbConection = new OleDbConnection(_conectionStr);
+            dbConection.Open();
+            OleDbCommand command = new OleDbCommand("SELECT * FROM Staff", dbConection);
 
+            OleDbDataReader reader = command.ExecuteReader();
 
+            dataGrid.Rows.Clear();
 
+            if (reader.HasRows != false)
+            {
+                while (reader.Read())
+                {
+                    dataGrid.Rows.Add
+                        (reader["id"], reader["_Name"], reader["_Age"], reader["_Salary"], reader["_Profession"], reader["_Contact"]);
+                }
+            }
+            else
+                MessageBox.Show("Не удалось получить данные!", "Ошибка!");
+
+            reader.Close();
+            dbConection.Close();
+
+            //Потом не сохраненные данные
+            foreach (var s in Staff)
+            {
+                dataGrid.Rows.Add(s.Id, s.Name, s.Age, s.Experience, s.Contact, s.Profession);
+            }
+        }
+        //
+        //Вспомогательные методы
+        //
         public static void SaveData()
         {
             foreach (Person person in Staff)
@@ -299,6 +330,13 @@ namespace WinFormsApp1.Person
             }
             _id++;
             dbConection.Close();
+        }
+        public static bool AllDataSaved()
+        {
+            if (Staff.Count == 0 && Applicants.Count == 0)
+                return true;
+            else
+                return false;
         }
   
     }
