@@ -281,7 +281,7 @@ namespace WinFormsApp1.Person
             //Потом не сохраненные данные
             foreach (var s in Staff)
             {
-                dataGrid.Rows.Add(s.Id, s.Name, s.Age, s.Experience, s.Contact, s.Profession);
+                dataGrid.Rows.Add(s.Id, s.Name, s.Age, s.Salary, s.Contact, s.Profession);
             }
         }
         //

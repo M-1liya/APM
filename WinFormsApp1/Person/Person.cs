@@ -26,7 +26,7 @@ namespace WinFormsApp1.Person
         {
             _id = id;
             _name = name;
-            _age = age;
+            Age = age;
             _experience = experience;
             _contact = contact;
             _prof = prof;
@@ -35,7 +35,7 @@ namespace WinFormsApp1.Person
         public Person(int id, string name, int age, string experience, string contact, string prof, int salary = 0)
             :this(id, name, "age", experience, contact, prof, salary)
         {
-            _age = (DateTime.Now.Year - age).ToString() + " г.";
+            Age = (DateTime.Now.Year - age).ToString();
         }
 
         public int Id => _id;

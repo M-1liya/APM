@@ -31,9 +31,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(staffForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(staffForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.действияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.уволитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,15 +43,15 @@
             this.кадровоеАгенствоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dataGridViewSF = new System.Windows.Forms.DataGridView();
+            this.buttonReload = new System.Windows.Forms.Button();
+            this.buttonEdit = new System.Windows.Forms.Button();
+            this.buttonRemove = new System.Windows.Forms.Button();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.age = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.salary = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.prof = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contact = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonReload = new System.Windows.Forms.Button();
-            this.buttonEdit = new System.Windows.Forms.Button();
-            this.buttonRemove = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -180,55 +180,6 @@
             this.dataGridViewSF.Size = new System.Drawing.Size(786, 533);
             this.dataGridViewSF.TabIndex = 0;
             // 
-            // ID
-            // 
-            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ID.HeaderText = "ID";
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
-            this.ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ID.Width = 49;
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.name.HeaderText = "Ф.И.О";
-            this.name.Name = "name";
-            this.name.Width = 76;
-            // 
-            // age
-            // 
-            this.age.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle2.Format = "d";
-            dataGridViewCellStyle2.NullValue = null;
-            this.age.DefaultCellStyle = dataGridViewCellStyle2;
-            this.age.HeaderText = "Возраст";
-            this.age.Name = "age";
-            this.age.Width = 89;
-            // 
-            // salary
-            // 
-            this.salary.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.salary.DefaultCellStyle = dataGridViewCellStyle3;
-            this.salary.HeaderText = "Оклад";
-            this.salary.Name = "salary";
-            this.salary.Width = 78;
-            // 
-            // prof
-            // 
-            this.prof.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.prof.HeaderText = "Должность";
-            this.prof.Name = "prof";
-            this.prof.Width = 113;
-            // 
-            // contact
-            // 
-            this.contact.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.contact.HeaderText = "Контакты";
-            this.contact.Name = "contact";
-            // 
             // buttonReload
             // 
             this.buttonReload.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -274,6 +225,55 @@
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
+            // ID
+            // 
+            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ID.Width = 49;
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.name.HeaderText = "Ф.И.О";
+            this.name.Name = "name";
+            this.name.Width = 76;
+            // 
+            // age
+            // 
+            this.age.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle2.Format = "d";
+            dataGridViewCellStyle2.NullValue = null;
+            this.age.DefaultCellStyle = dataGridViewCellStyle2;
+            this.age.HeaderText = "Год рождения";
+            this.age.Name = "age";
+            this.age.Width = 135;
+            // 
+            // salary
+            // 
+            this.salary.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle3.Format = "C2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.salary.DefaultCellStyle = dataGridViewCellStyle3;
+            this.salary.HeaderText = "Оклад";
+            this.salary.Name = "salary";
+            this.salary.Width = 78;
+            // 
+            // prof
+            // 
+            this.prof.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.prof.HeaderText = "Должность";
+            this.prof.Name = "prof";
+            this.prof.Width = 113;
+            // 
+            // contact
+            // 
+            this.contact.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.contact.HeaderText = "Контакты";
+            this.contact.Name = "contact";
+            // 
             // staffForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -287,6 +287,7 @@
             this.MaximizeBox = false;
             this.Name = "staffForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " Штат сотрудников";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

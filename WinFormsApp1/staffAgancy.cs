@@ -5,13 +5,11 @@ namespace WinFormsApp1
 {
     public partial class staffAgancy : Form
     {
-        private int _id = 0;
-        private const string _conectionStr = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=StaffAgancy.mdb";
 
         public staffAgancy()
         {
             InitializeComponent();
-            loadDatabase();
+            LoadDatabase();
         }
         //
         //Кнопки панели меню
@@ -22,24 +20,34 @@ namespace WinFormsApp1
         }
         private void обновитьТаблицуToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            loadDatabase();
+            LoadDatabase();
         }
         private void штатСотрудниковToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Hide();
             staffForm form = new staffForm();
+
             form.ShowDialog();
             //this.Visible = false;
             this.Show();
+            LoadDatabase();
 
             
 
+        }
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(!DataBase.AllDataSaved())
+            {
+                DataBase.SaveData();
+            }
         }
         //
         //Описание кнопок
         //
         private void buttonAdd_Click(object sender, EventArgs e)
         {
+            int a = 0;
             if (dataGridView1.SelectedRows.Count != 1)
             {
                 MessageBox.Show("Пожалуйста, выберите одну строку", "Внимание!");
@@ -59,6 +67,21 @@ namespace WinFormsApp1
             string? contact = dataGridView1.Rows[index].Cells[4].Value.ToString();
             string? prof = dataGridView1.Rows[index].Cells[5].Value.ToString();
 
+            if(!int.TryParse(exp, out int i))
+            {
+                MessageBox.Show("Введите числовове значение!", "Ошибка! Поле: Стаж работы");
+                return ;
+            }
+
+            foreach(var c in age)
+                if(char.IsDigit(c)) a++;
+            if(a < age.Length / 2)
+            {
+                MessageBox.Show("Некорректно указан год рождения", "Ошибка!");
+                return;
+            }
+
+
 
             int id = DataBase.AddApplicant(name, age, exp, contact, prof);
             dataGridView1.Rows[index].Cells[0].Value = id;
@@ -76,6 +99,11 @@ namespace WinFormsApp1
             int index = dataGridView1.SelectedRows[0].Index;
 
             if (!GoodData(index)) return;
+            if (dataGridView1.Rows[index].Cells[0].Value == null)
+            {
+                MessageBox.Show("Произошла ошибка!\nВероятно вы не добавили соискателя. Попробуйте снова", "Ошибка");
+                return;
+            }
 
             //запомнить данные
             string? id = dataGridView1.Rows[index].Cells[0].Value.ToString();
@@ -92,7 +120,7 @@ namespace WinFormsApp1
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             Delete_Click(sender, e);
-            loadDatabase();
+
         }//Ready
         private void buttonAddWorker_Click(object sender, EventArgs e)
         {
@@ -105,6 +133,11 @@ namespace WinFormsApp1
             //запомнить строку
             int index = dataGridView1.SelectedRows[0].Index;
             if(!GoodData(index)) return;
+            if(dataGridView1.Rows[index].Cells[0].Value == null)
+            {
+                MessageBox.Show("Произошла ошибка!\nВероятно вы не добавили соискателя. Попробуйте снова", "Ошибка");
+                return ;
+            }
 
 
             //запомнить данные
@@ -114,26 +147,29 @@ namespace WinFormsApp1
             string? exp = dataGridView1.Rows[index].Cells[3].Value.ToString();
             string? contact = dataGridView1.Rows[index].Cells[4].Value.ToString();
             string? prof = dataGridView1.Rows[index].Cells[5].Value.ToString();
-            string salary = "0";
 
 
             MessageBox.Show(DataBase.AddStaff(int.Parse(id), name, age, exp, contact, prof));
             Delete_Click(sender, e, false);
 
-            loadDatabase();
-
         }//Ready
         //
         //Вспомогательные методы
         //
-        private void loadDatabase()
+        private void LoadDatabase()
         {
             DataBase.LoadApplicantBase(dataGridView1);
         }//Ready
         private void Delete_Click(object sender, EventArgs e, bool giveMess = true)
         {
-                int index = dataGridView1.SelectedRows[0].Index;
-                string? id = dataGridView1.Rows[index].Cells[0].Value.ToString();
+            int index = dataGridView1.SelectedRows[0].Index;
+            if (dataGridView1.Rows[index].Cells[0].Value == null)
+            {
+                MessageBox.Show("Произошла ошибка!\nВероятно вы не добавили соискателя. Попробуйте снова", "Ошибка");
+                return;
+            }
+
+            string? id = dataGridView1.Rows[index].Cells[0].Value.ToString();
 
             if (giveMess)
             {
@@ -158,33 +194,34 @@ namespace WinFormsApp1
             else
                 DataBase.DeleteApplicant(int.Parse(id));
 
+            LoadDatabase();
+
         }//Ready
-        bool GoodData(in int index)
+        bool GoodData(int index)
         {
             
             //Проверить заполненность данных
             if (
-                dataGridView1.Rows[index].Cells[1] == null ||
-                dataGridView1.Rows[index].Cells[2] == null ||
-                dataGridView1.Rows[index].Cells[3] == null ||
-                dataGridView1.Rows[index].Cells[4] == null ||
-                dataGridView1.Rows[index].Cells[5] == null)
+                dataGridView1.Rows[index].Cells[1].Value == null || 
+                dataGridView1.Rows[index].Cells[2].Value == null ||
+                dataGridView1.Rows[index].Cells[3].Value == null ||
+                dataGridView1.Rows[index].Cells[4].Value == null ||
+                dataGridView1.Rows[index].Cells[5].Value == null)
             {
                 MessageBox.Show("Не все данные были заполнены!", "Внимание!");
                 return false;
             }
             return true;
         }//Ready
-
         private void staffAgancy_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!DataBase.AllDataSaved())
             {
-                SaveDataDialog sd = new(this);
+                SaveDataDialog sd = new(this, e);
                 sd.ShowDialog();
+                sd.Location = new Point(0, 1000);
             }
         }
-
 
     }
 

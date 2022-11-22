@@ -50,29 +50,11 @@ namespace WinFormsApp1
             string? prof = dataGridViewSF.Rows[index].Cells[4].Value.ToString();
             string? contact = dataGridViewSF.Rows[index].Cells[5].Value.ToString();
 
+            DataBase.AddApplicant(name, age, exp, prof, contact);
+            MessageBox.Show(DataBase.DeleteStaff(int.Parse(id)));
 
-            //сосздать соединение с БД
-            OleDbConnection dbConection = new OleDbConnection(_conectionStr);
 
-
-            //Отправить запрос
-            string cmdText = $"INSERT INTO StaffAg VALUES('{id}', '{name}', '{age}', '{exp}', '{contact}', '{prof}' )";
-
-            if (sendRequest(cmdText, dbConection))
-            {
-                MessageBox.Show("Сотрудник уволен!", "Выполнено");
-
-                //Очистить поля
-                cmdText = $"DELETE FROM Staff WHERE id = {id}";
-                if(sendRequest(cmdText, dbConection))
-                    dataGridViewSF.Rows.RemoveAt(index);
-            }
-            else
-            {
-                MessageBox.Show("Произошла ошибка! Попробуйте снова.", "Ошибка");
-            }
-
-        }
+        }//Ready
         private void buttonReload_Click(object sender, EventArgs e)
         {
             LoadDatabase();
@@ -111,7 +93,7 @@ namespace WinFormsApp1
 
             DataBase.EditStaff(Id, name, age, contact, prof, Salary);
 
-        }
+        }//Ready
         //
         //Вспомогательные методы
         //
@@ -120,37 +102,17 @@ namespace WinFormsApp1
 
 
             //Проверить заполненность данных
-            if (dataGridViewSF.Rows[index].Cells[0] == null ||
-                dataGridViewSF.Rows[index].Cells[1] == null ||
-                dataGridViewSF.Rows[index].Cells[2] == null ||
-                dataGridViewSF.Rows[index].Cells[3] == null ||
-                dataGridViewSF.Rows[index].Cells[4] == null ||
-                dataGridViewSF.Rows[index].Cells[5] == null)
+            if (dataGridViewSF.Rows[index].Cells[0].Value == null ||
+                dataGridViewSF.Rows[index].Cells[1].Value == null ||
+                dataGridViewSF.Rows[index].Cells[2].Value == null ||
+                dataGridViewSF.Rows[index].Cells[3].Value == null ||
+                dataGridViewSF.Rows[index].Cells[4].Value == null ||
+                dataGridViewSF.Rows[index].Cells[5].Value == null)
             {
                 MessageBox.Show("Не все данные были заполнены!", "Внимание!");
                 return false;
             }
             return true;
-        }
-        bool sendRequest(in string cmdText, in OleDbConnection dbConection)
-        {
-            dbConection.Open();
-            OleDbCommand command = new OleDbCommand(cmdText, dbConection);
-            bool answer = false;
-
-            try
-            {
-                if (command.ExecuteNonQuery() == 1)
-                    answer = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!");
-            }
-
-            dbConection.Close();
-            return answer;
-
         }
         void LoadDatabase()
         {
