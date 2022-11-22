@@ -91,7 +91,8 @@ namespace WinFormsApp1
             int.TryParse(id, out int Id);
             int.TryParse(SAL, out int Salary);
 
-            DataBase.EditStaff(Id, name, age, contact, prof, Salary);
+            MessageBox.Show(DataBase.EditStaff(Id, name, age, contact, prof, Salary));
+            LoadDatabase();
 
         }//Ready
         //

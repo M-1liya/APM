@@ -59,7 +59,7 @@ namespace WinFormsApp1.Person
             {
                 OleDbConnection dbConection = new OleDbConnection(_conectionStr);
                 string cmdText =
-                    $"UPDATE StaffAg SET _Name= '{name}', _Age= {age}, _Exp= {experience}, _Contact= '{contact}', _Profession= '{profession}' WHERE id= {id}";
+                    $"UPDATE StaffAg SET _Name= '{name}', _Age= '{age}', _Exp= {experience}, _Contact= '{contact}', _Profession= '{profession}' WHERE id= {id}";
                 dbConection.Open();
                 OleDbCommand command = new OleDbCommand(cmdText, dbConection);
 
@@ -191,7 +191,7 @@ namespace WinFormsApp1.Person
             {
                 OleDbConnection dbConection = new OleDbConnection(_conectionStr);
                 string cmdText =
-                    $"UPDATE Staff SET _Name= '{name}', _Age= {age}, _Salary= {salary}, _Profession= '{profession}', _Contact= '{contact}' WHERE id= {id}";
+                    $"UPDATE Staff SET _Name= '{name}', _Age= '{age}', _Salary= {salary}, _Profession= '{profession}', _Contact= '{contact}' WHERE id= {id}";
                 dbConection.Open();
                 OleDbCommand command = new OleDbCommand(cmdText, dbConection);
 
@@ -289,16 +289,17 @@ namespace WinFormsApp1.Person
         //
         public static void SaveData()
         {
+
             foreach (Person person in Staff)
             {
                 person.SaveAsStaff(_conectionStr);
-                Staff.Remove(person);
             }
             foreach (Person person in Applicants)
             {
                 person.SaveAsApplicant(_conectionStr);
-                Applicants.Remove(person);
             }
+            Staff.Clear();
+            Applicants.Clear();
 
         }
         private static void GetID()

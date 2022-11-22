@@ -47,7 +47,11 @@ namespace WinFormsApp1.Person
         public string Age 
         {
             get => _age;
-            set => _age = value + " г.";
+            set
+            {
+                value = value.Replace("г.", "");
+                _age = value + "г.";
+            }
         }
         public string Experience
         {
