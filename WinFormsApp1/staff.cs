@@ -1,5 +1,5 @@
 ﻿using System.Data.OleDb;
-using WinFormsApp1.Person;
+using WinFormsApp1.DBprocess;
 
 namespace WinFormsApp1
 {

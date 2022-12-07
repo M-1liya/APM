@@ -61,8 +61,8 @@ namespace WinFormsApp1
                 return;
 
             //Проверка уникальности
-            string? id = dataGridView1.Rows[index].Cells[0].Value.ToString();
-            if(id != null)
+            string? _id = dataGridView1.Rows[index].Cells[0].Value.ToString();
+            if(_id != null)
             {
                 MessageBox.Show("Вы пытаетесь добавить человека, который уже есть в списке", "Внимание!");
                 return;

@@ -87,9 +87,6 @@ namespace WinFormsApp1.DBprocess
                 OleDbConnection dbConection = new OleDbConnection(_conectionStr);
                 string cmdText = $"DELETE FROM StaffAg WHERE id = {Id}";
 
-                dbConection.Open();
-                OleDbCommand command = new OleDbCommand(cmdText, dbConection);
-
                 try
                 {
                     if (SendRequest(cmdText, dbConection))
