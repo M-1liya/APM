@@ -1,19 +1,15 @@
-﻿using WinFormsApp1.Person;
+﻿using WinFormsApp1.DBprocess;
 
 namespace WinFormsApp1
 {
     public partial class SaveDataDialog : Form
     {
-        Form baseForm;
         FormClosingEventArgs eventArgs;
         bool choice = true;
         public SaveDataDialog(Form baseForm, FormClosingEventArgs e)
         {
             InitializeComponent();
-            //label1.Text = "Вы хотите сохранить изменения?\n\nПри нажатии  \"Не сохранять\" последние изменения будут утеряны!";
-            this.baseForm = baseForm;
             this.eventArgs = e;
-            this.Location = new Point(670, 430);
         }
 
 

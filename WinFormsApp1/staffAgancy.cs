@@ -1,5 +1,5 @@
 ﻿using System.Data.OleDb;
-using WinFormsApp1.Person;
+using WinFormsApp1.DBprocess;
 
 namespace WinFormsApp1
 {
@@ -60,6 +60,14 @@ namespace WinFormsApp1
             if (!GoodData(index))
                 return;
 
+            //Проверка уникальности
+            string? id = dataGridView1.Rows[index].Cells[0].Value.ToString();
+            if(id != null)
+            {
+                MessageBox.Show("Вы пытаетесь добавить человека, который уже есть в списке", "Внимание!");
+                return;
+            }
+
             //запомнить данные
             string? name = dataGridView1.Rows[index].Cells[1].Value.ToString();
             string? age = dataGridView1.Rows[index].Cells[2].Value.ToString();
@@ -86,7 +94,7 @@ namespace WinFormsApp1
             int id = DataBase.AddApplicant(name, age, exp, contact, prof);
             dataGridView1.Rows[index].Cells[0].Value = id;
 
-        }//Ready
+        }
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count != 1)
@@ -116,12 +124,12 @@ namespace WinFormsApp1
             int.TryParse(id, out int Id);
             MessageBox.Show(DataBase.EditApplicant(Id, name, age, exp, contact, prof));
 
-        }//Ready
+        }
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             Delete_Click(sender, e);
 
-        }//Ready
+        }
         private void buttonAddWorker_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count != 1)
@@ -152,14 +160,14 @@ namespace WinFormsApp1
             MessageBox.Show(DataBase.AddStaff(int.Parse(id), name, age, exp, contact, prof));
             Delete_Click(sender, e, false);
 
-        }//Ready
+        }
         //
         //Вспомогательные методы
         //
         private void LoadDatabase()
         {
             DataBase.LoadApplicantBase(dataGridView1);
-        }//Ready
+        }
         private void Delete_Click(object sender, EventArgs e, bool giveMess = true)
         {
             int index = dataGridView1.SelectedRows[0].Index;
@@ -196,7 +204,7 @@ namespace WinFormsApp1
 
             LoadDatabase();
 
-        }//Ready
+        }
         bool GoodData(int index)
         {
             
@@ -212,7 +220,7 @@ namespace WinFormsApp1
                 return false;
             }
             return true;
-        }//Ready
+        }
         private void staffAgancy_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!DataBase.AllDataSaved())

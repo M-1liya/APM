@@ -54,11 +54,11 @@ namespace WinFormsApp1
             MessageBox.Show(DataBase.DeleteStaff(int.Parse(id)));
 
 
-        }//Ready
+        }
         private void buttonReload_Click(object sender, EventArgs e)
         {
             LoadDatabase();
-        }//Ready
+        }
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (dataGridViewSF.SelectedRows.Count != 1)
@@ -94,7 +94,7 @@ namespace WinFormsApp1
             MessageBox.Show(DataBase.EditStaff(Id, name, age, contact, prof, Salary));
             LoadDatabase();
 
-        }//Ready
+        }
         //
         //Вспомогательные методы
         //

@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsApp1;
+using WinFormsApp1.DBprocess.People;
 
-namespace WinFormsApp1.Person
+namespace WinFormsApp1.DBprocess
 {
     static internal class DataBase
     {
         private static int _id = -1;
         private const string _conectionStr = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=StaffAgancy.mdb";
         private static List<Person> Applicants = new();
-        private static List<Person> Staff = new();
+        private static List<Employee> Staff = new();
 
         //
         //Элементы управления для базы StaffAg
@@ -60,12 +55,9 @@ namespace WinFormsApp1.Person
                 OleDbConnection dbConection = new OleDbConnection(_conectionStr);
                 string cmdText =
                     $"UPDATE StaffAg SET _Name= '{name}', _Age= '{age}', _Exp= {experience}, _Contact= '{contact}', _Profession= '{profession}' WHERE id= {id}";
-                dbConection.Open();
-                OleDbCommand command = new OleDbCommand(cmdText, dbConection);
-
                 try
                 {
-                    if (command.ExecuteNonQuery() == 1)
+                    if (SendRequest(cmdText, dbConection))
                         return "Успех";
                 }
                 catch (Exception ex)
@@ -73,7 +65,6 @@ namespace WinFormsApp1.Person
                     return ex.Message;
                 }
 
-                dbConection.Close();
             }
             return "Ошибка";
 
@@ -99,18 +90,14 @@ namespace WinFormsApp1.Person
                 dbConection.Open();
                 OleDbCommand command = new OleDbCommand(cmdText, dbConection);
 
-
                 try
                 {
-                    if (command.ExecuteNonQuery() == 1)
-                    {
-                        dbConection.Close();
+                    if (SendRequest(cmdText, dbConection))
                         return "Успех";
-                    }   
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return "Ошибка!";
+                    return ex.Message;
                 }
 
             }
@@ -153,16 +140,16 @@ namespace WinFormsApp1.Person
         public static string AddStaff(int id, string name, string age, string experience, string contact, string profession)
         {
 
-            Person _staff;
+            Employee _staff;
 
             if (int.TryParse(age, out int intAge) && intAge < 200)
             {
-                _staff = new Person(id, name, intAge, experience, contact, profession);
+                _staff = new Employee(id, name, intAge, experience, contact, profession);
 
             }
             else
             {
-                _staff = new Person(id, name, age, experience, contact, profession);
+                _staff = new Employee(id, name, age, experience, contact, profession);
 
             }
 
@@ -172,15 +159,15 @@ namespace WinFormsApp1.Person
         public static string EditStaff(int id, string name, string age, string contact, string profession, int salary)
         {
             bool find = false;
-            foreach (Person person in Staff)  //Ищем в списке
+            foreach (Employee employee in Staff)  //Ищем в списке
             {
-                if (person.Id == id)
+                if (employee.Id == id)
                 {
-                    person.Name = name;
-                    person.Age = age;
-                    person.Salary = salary;
-                    person.Contact = contact;
-                    person.Profession = profession;
+                    employee.Name = name;
+                    employee.Age = age;
+                    employee.Salary = salary;
+                    employee.Contact = contact;
+                    employee.Profession = profession;
                     find = true;
                     return "Успех";
                 }
@@ -192,33 +179,29 @@ namespace WinFormsApp1.Person
                 OleDbConnection dbConection = new OleDbConnection(_conectionStr);
                 string cmdText =
                     $"UPDATE Staff SET _Name= '{name}', _Age= '{age}', _Salary= {salary}, _Profession= '{profession}', _Contact= '{contact}' WHERE id= {id}";
-                dbConection.Open();
-                OleDbCommand command = new OleDbCommand(cmdText, dbConection);
 
                 try
                 {
-                    if (command.ExecuteNonQuery() == 1)
-                        return "Успех";
+                if (SendRequest(cmdText, dbConection))
+                    return "Успех";
                 }
                 catch (Exception ex)
                 {
                     return ex.Message;
                 }
-
-                dbConection.Close();
             }
 
             return "Ошибка";
         }
         public static string DeleteStaff(int Id)
         {
-            foreach (Person person in Staff)
+            foreach (Employee employee in Staff)
             {
                 bool find = false;
 
-                if (person.Id == Id)
+                if (employee.Id == Id)
                 {
-                    Staff.Remove(person);
+                    Staff.Remove(employee);
                     find = true;
                     return "Успех";
                 }
@@ -229,21 +212,14 @@ namespace WinFormsApp1.Person
                     OleDbConnection dbConection = new OleDbConnection(_conectionStr);
                     string cmdText = $"DELETE FROM StaffAg WHERE id = {Id}";
 
-                    dbConection.Open();
-                    OleDbCommand command = new OleDbCommand(cmdText, dbConection);
-
-
                     try
                     {
-                        if (command.ExecuteNonQuery() == 1)
-                        {
-                            dbConection.Close();
+                        if (SendRequest(cmdText, dbConection))
                             return "Успех";
-                        }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        return "Непредвиденная ошибка!";
+                        return ex.Message;
                     }
 
                 }
@@ -281,7 +257,7 @@ namespace WinFormsApp1.Person
             //Потом не сохраненные данные
             foreach (var s in Staff)
             {
-                dataGrid.Rows.Add(s.Id, s.Name, s.Age, s.Salary, s.Contact, s.Profession);
+                dataGrid.Rows.Add(s.Id, s.Name, s.Age, s.Salary, s.Profession, s.Contact);
             }
         }
         //
@@ -289,15 +265,19 @@ namespace WinFormsApp1.Person
         //
         public static void SaveData()
         {
+            ISaveInDB saveInDB = new SaveEmployee();
+            foreach (var people in Staff)
+            {
+                saveInDB.SaveInDB(people, _conectionStr);
+            }
 
-            foreach (Person person in Staff)
+            saveInDB = new SavePerson();
+            foreach (var people in Applicants)
             {
-                person.SaveAsStaff(_conectionStr);
+                saveInDB.SaveInDB(people, _conectionStr);
+
             }
-            foreach (Person person in Applicants)
-            {
-                person.SaveAsApplicant(_conectionStr);
-            }
+
             Staff.Clear();
             Applicants.Clear();
 
@@ -339,7 +319,20 @@ namespace WinFormsApp1.Person
             else
                 return false;
         }
-  
+        private static bool SendRequest(in string cmdText, in OleDbConnection dbConection)
+        {
+            dbConection.Open();
+            OleDbCommand command = new OleDbCommand(cmdText, dbConection);
+            bool answer = false;
+
+            if (command.ExecuteNonQuery() == 1)
+                answer = true;  
+
+            dbConection.Close();
+            return answer;
+
+        }
+
     }
 
 }
