@@ -6,6 +6,7 @@ namespace WinFormsApp1
     public partial class staffAgancy : Form
     {
         IApplicantDataBase ApDataBase = new ApplicantDataBase();
+        IStaffDataBase StaffDataBase = new StaffDataBase();
         public staffAgancy()
         {
             InitializeComponent();
@@ -37,9 +38,9 @@ namespace WinFormsApp1
         }
         private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(!DataBase.AllDataSaved())
+            if(!ApDataBase.AllDataSaved())
             {
-                DataBase.SaveData();
+                ApDataBase.SaveData();
             }
         }
         //
@@ -157,7 +158,7 @@ namespace WinFormsApp1
             string? prof = dataGridView1.Rows[index].Cells[5].Value.ToString();
 
 
-            MessageBox.Show(DataBase.AddStaff(int.Parse(id), name, age, exp, contact, prof));
+            MessageBox.Show(StaffDataBase.Add(int.Parse(id), name, age, exp, contact, prof));
             Delete_Click(sender, e, false);
 
         }
@@ -166,7 +167,7 @@ namespace WinFormsApp1
         //
         private void LoadDatabase()
         {
-            DataBase.LoadApplicantBase(dataGridView1);
+            ApDataBase.Load(dataGridView1);
         }
         private void Delete_Click(object sender, EventArgs e, bool giveMess = true)
         {
@@ -223,11 +224,11 @@ namespace WinFormsApp1
         }
         private void staffAgancy_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!ApDataBase.AllDataSaved())
+            if (!ApDataBase.AllDataSaved() || !StaffDataBase.AllDataSaved())
             {
                 SaveDataDialog sd = new(this, e);
                 sd.ShowDialog();
-                sd.Location = new Point(0, 1000);
+
             }
         }
 

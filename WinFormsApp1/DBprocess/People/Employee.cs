@@ -9,6 +9,7 @@ namespace WinFormsApp1.DBprocess.People
         private Person _p;
         private int _salary = 0;
         private DateTime _hiredWith;
+        private string _hiredWithStr;
 
         public Employee(Person person, int salary = 0)
         {
@@ -25,6 +26,7 @@ namespace WinFormsApp1.DBprocess.People
             _p = new Person(id, name, age, experience, contact, prof);
             Salary = salary;
         }
+
 
         public int Id => _p.Id;
         public string Name
@@ -57,12 +59,6 @@ namespace WinFormsApp1.DBprocess.People
             get => _p.Experience;
             set => _p.Experience = value;
         }
-        public DateTime HiredWith
-        {
-            get => _hiredWith;
-            set => _hiredWith = value;
-        }
-
 
     }
 }
