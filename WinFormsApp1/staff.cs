@@ -7,6 +7,11 @@ namespace WinFormsApp1
     {
 
         private const string _conectionStr = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=StaffAgancy.mdb";
+
+        IStaffDataBase StaffDataBase = new StaffDataBase();
+        IApplicantDataBase ApDataBase = new ApplicantDataBase();
+
+
         public staffForm()
         {
             InitializeComponent();
@@ -50,8 +55,8 @@ namespace WinFormsApp1
             string? prof = dataGridViewSF.Rows[index].Cells[4].Value.ToString();
             string? contact = dataGridViewSF.Rows[index].Cells[5].Value.ToString();
 
-            DataBase.AddApplicant(name, age, exp, prof, contact);
-            MessageBox.Show(DataBase.DeleteStaff(int.Parse(id)));
+            ApDataBase.Add(name, age, exp, prof, contact);
+            MessageBox.Show(StaffDataBase.Delete(int.Parse(id)));
 
 
         }
@@ -91,7 +96,7 @@ namespace WinFormsApp1
             int.TryParse(id, out int Id);
             int.TryParse(SAL, out int Salary);
 
-            MessageBox.Show(DataBase.EditStaff(Id, name, age, contact, prof, Salary));
+            MessageBox.Show(StaffDataBase.Edit(Id, name, age, contact, prof, Salary));
             LoadDatabase();
 
         }
@@ -117,7 +122,7 @@ namespace WinFormsApp1
         }
         void LoadDatabase()
         {
-            DataBase.LoadStaffBase(dataGridViewSF);
+            StaffDataBase.Load(dataGridViewSF);
         }
 
     }

@@ -1,14 +1,16 @@
 ﻿using System;
 
 
+
 namespace WinFormsApp1.DBprocess.People
 {
-    internal class Employee : IPeople
+    public class Employee : IPeople
     {
         private Person _p;
         private int _salary = 0;
+        private DateTime _hiredWith;
 
-        public Employee(Person person, int salary)
+        public Employee(Person person, int salary = 0)
         {
             _p = person;
             Salary = salary;
@@ -50,6 +52,17 @@ namespace WinFormsApp1.DBprocess.People
             get => _salary;
             set { if (value > 0) _salary = value; }
         }
+        public string Experience
+        {
+            get => _p.Experience;
+            set => _p.Experience = value;
+        }
+        public DateTime HiredWith
+        {
+            get => _hiredWith;
+            set => _hiredWith = value;
+        }
+
 
     }
 }

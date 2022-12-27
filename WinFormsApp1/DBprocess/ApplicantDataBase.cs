@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Data.OleDb;
+using System.Xml.Linq;
 using WinFormsApp1.DBprocess.People;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WinFormsApp1.DBprocess
 {
-    static internal class DataBase
+    internal class ApplicantDataBase: IApplicantDataBase
     {
         private static int _id = -1;
         private const string _conectionStr = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=StaffAgancy.mdb";
@@ -14,7 +16,7 @@ namespace WinFormsApp1.DBprocess
         //
         //Элементы управления для базы StaffAg
         //
-        public static int AddApplicant(string name, string age, string experience, string contact, string profession)
+        public int Add(string name, string age, string experience, string contact, string profession)
         {
             if (_id == -1) GetID();
             Person applicant;
@@ -33,7 +35,7 @@ namespace WinFormsApp1.DBprocess
             Applicants.Add(applicant);
             return applicant.Id;
         }
-        public static string EditApplicant(int id, string name, string age, string experience, string contact, string profession)
+        public string Edit(int id, string name, string age, string experience, string contact, string profession)
         {
             bool find = false;
             foreach (Person person in Applicants)
@@ -69,7 +71,7 @@ namespace WinFormsApp1.DBprocess
             return "Ошибка";
 
         }
-        public static string DeleteApplicant(int Id)
+        public string Delete(int Id)
         {
             bool find = false;
             foreach (Person person in Applicants)
@@ -100,7 +102,7 @@ namespace WinFormsApp1.DBprocess
             }
             return "Ошибка";
         }
-        public static void LoadApplicantBase(DataGridView dataGrid)
+        public void Load(DataGridView dataGrid)
         {
             //Запрос в базу данных
             OleDbConnection dbConection = new OleDbConnection(_conectionStr);
@@ -257,10 +259,59 @@ namespace WinFormsApp1.DBprocess
                 dataGrid.Rows.Add(s.Id, s.Name, s.Age, s.Salary, s.Profession, s.Contact);
             }
         }
+        public static Employee? GetEmployee(int Id)
+        {
+            Employee? employee;
+
+            foreach (Employee emp in Staff)
+            {
+                if (emp.Id == Id) return emp;
+            }
+
+            OleDbConnection dbConection = new OleDbConnection(_conectionStr);
+            dbConection.Open();
+            OleDbCommand command = new OleDbCommand("SELECT * FROM Staff", dbConection);
+
+            OleDbDataReader reader = command.ExecuteReader();
+
+            if (reader.HasRows != false)
+            {
+                while (reader.Read())
+                {
+                    if (reader["id"].ToString() == Id.ToString())
+                    {
+                        try
+                        {
+                            int.TryParse(reader["id"].ToString(), out int id);
+                            employee = new(id, reader["_Name"].ToString(), reader["_Age"].ToString(), reader["_Profession"].ToString(), reader["_Hired"].ToString(), reader["_Contact"].ToString());
+
+                            reader.Close();
+                            dbConection.Close();
+                            return employee;
+                        }
+                        catch(Exception)
+                        {
+                            reader.Close();
+                            dbConection.Close();
+                            return null;
+                        }
+
+                    }
+                }
+            }
+            else
+                MessageBox.Show("Не удалось получить данные!", "Ошибка!");
+
+            reader.Close();
+            dbConection.Close();
+
+
+            return null;
+        }
         //
         //Вспомогательные методы
         //
-        public static void SaveData()
+        public void SaveData()
         {
             ISaveInDB saveInDB = new SaveEmployee();
             foreach (var people in Staff)

@@ -5,7 +5,7 @@ namespace WinFormsApp1
 {
     public partial class staffAgancy : Form
     {
-
+        IApplicantDataBase ApDataBase = new ApplicantDataBase();
         public staffAgancy()
         {
             InitializeComponent();
@@ -91,7 +91,7 @@ namespace WinFormsApp1
 
 
 
-            int id = DataBase.AddApplicant(name, age, exp, contact, prof);
+            int id = ApDataBase.Add(name, age, exp, contact, prof);
             dataGridView1.Rows[index].Cells[0].Value = id;
 
         }
@@ -122,7 +122,7 @@ namespace WinFormsApp1
             string? prof = dataGridView1.Rows[index].Cells[5].Value.ToString();
 
             int.TryParse(id, out int Id);
-            MessageBox.Show(DataBase.EditApplicant(Id, name, age, exp, contact, prof));
+            MessageBox.Show(ApDataBase.Edit(Id, name, age, exp, contact, prof));
 
         }
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -197,10 +197,10 @@ namespace WinFormsApp1
                 }
 
                 //запомнить данные
-                MessageBox.Show(DataBase.DeleteApplicant(int.Parse(id)));
+                MessageBox.Show(ApDataBase.Delete(int.Parse(id)));
             }
             else
-                DataBase.DeleteApplicant(int.Parse(id));
+                ApDataBase.Delete(int.Parse(id));
 
             LoadDatabase();
 
@@ -223,7 +223,7 @@ namespace WinFormsApp1
         }
         private void staffAgancy_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!DataBase.AllDataSaved())
+            if (!ApDataBase.AllDataSaved())
             {
                 SaveDataDialog sd = new(this, e);
                 sd.ShowDialog();

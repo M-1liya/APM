@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1.DBprocess.People
 {
-    internal class Person : IPeople
+    public class Person : IPeople
     {
         private int _id;
         private string _name;
